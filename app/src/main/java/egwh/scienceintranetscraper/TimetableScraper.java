@@ -110,7 +110,7 @@ public class TimetableScraper extends Activity {
                         int day = Integer.parseInt(e.attr("data-day"));
                         int hour = Integer.parseInt(e.attr("data-hour"));
                         String d = e.select("div.lectureinfo.duration").text().replaceAll("\\D+", "");
-                        int duration = 0;
+                        int duration = 1;
                         if(!"".equals(d)) {
                             duration = Integer.parseInt(d);
                         }
