@@ -11,6 +11,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Map;
 
 /**
@@ -33,6 +34,7 @@ public class TimetableScraper extends Activity {
     private Elements els;
     private Element table;
 
+    private ArrayList<Lecture> lectures = new ArrayList<Lecture>();
 
     public TimetableScraper(String username, String password){
         this.username = username;
@@ -98,7 +100,23 @@ public class TimetableScraper extends Activity {
                 //System.out.println(htmlDoc);
 
                 table = htmlDoc.getElementById("timetable");
-                els = table.select("div.slot");
+
+                // Loop through table to gather lecture info
+                for (Element e : table.select("div.slot")){
+                    if(!"".equals(e.select("strong").text())){
+                        String module = e.select("strong").text();
+                        String lecturer = e.select("span").text();
+                        String room = e.select("div.lectureinfo.room").text();
+                        int day = Integer.parseInt(e.attr("data-day"));
+                        int hour = Integer.parseInt(e.attr("data-hour"));
+                        String d = e.select("div.lectureinfo.duration").text().replaceAll("\\D+", "");
+                        int duration = 0;
+                        if(d.equals(" ")) {
+                            duration = Integer.parseInt(d);
+                        }
+                        lectures.add(new Lecture(module, lecturer, room, day, hour, duration));
+                    }
+                }
 
             }catch(IOException e){
                 e.printStackTrace();
@@ -108,8 +126,10 @@ public class TimetableScraper extends Activity {
         }
 
         protected void onPostExecute(Void result){
-
-            System.out.println(els);
+            for(Lecture l : lectures){
+                System.out.println(l.toString());
+            }
+            //System.out.println(els);
         }
     }
 
