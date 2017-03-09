@@ -2,6 +2,7 @@ package egwh.scienceintranetscraper;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -23,6 +24,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -57,6 +59,9 @@ public class TimetableScraper extends Activity {
     private Calendar c;
     private static int weeksFromToday = 0;
 
+    private Context context = TimetableScraper.this;
+    private ProgressDialog pd;
+
     public TimetableScraper(){
     }
 
@@ -84,7 +89,7 @@ public class TimetableScraper extends Activity {
                 weeksFromToday = weeksFromToday +1;
                 String date = getWeek(weeksFromToday);
                 onResume(date);
-                Toast.makeText(TimetableScraper.this, getWeek(weeksFromToday), Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, getWeek(weeksFromToday), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -94,7 +99,7 @@ public class TimetableScraper extends Activity {
                 weeksFromToday = weeksFromToday -1;
                 String date = getWeek(weeksFromToday);
                 onResume(date);
-                Toast.makeText(TimetableScraper.this, getWeek(weeksFromToday), Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, getWeek(weeksFromToday), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -125,8 +130,22 @@ public class TimetableScraper extends Activity {
     // Performs log in and grabs data.
     private class performLogin extends AsyncTask<String, Void, Void> {
 
+        @Override
+        protected void onPreExecute(){
+            pd = new ProgressDialog(context);
+            pd.setMessage("Fetching Lectures...");
+            pd.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            pd.show();
+        }
+
+        @Override
         protected Void doInBackground(String...params){
             try{
+                //Get passed date
+                String date = params[0];
+                //Update timetable URL.
+                String newUrl = ttUrl + date;
+
                 // HTTP Get request
                 Connection.Response getReq = Jsoup
                         .connect(baseUrl)
@@ -159,11 +178,6 @@ public class TimetableScraper extends Activity {
                 //Get new cookies after login
                 cookies = loginReq.cookies();
 
-
-                String date = params[0];
-                String newUrl = ttUrl + date;
-                Log.d("DATEEEEEEEEEEEEE", newUrl);
-
                 // Grab timetable page
                 Document htmlDoc = Jsoup
                         .connect(newUrl)
@@ -172,11 +186,12 @@ public class TimetableScraper extends Activity {
                         .cookies(cookies)
                         .get();
 
-                // Debug Code //
-
+                // Grab timetable from html document
                 table = htmlDoc.getElementById("timetable");
 
+                //Get day headings
                 Elements els = table.getElementsByClass("day");
+                //Add to days array
                 for(Element e: els){
                     days.add(e.text());
                 }
@@ -195,7 +210,6 @@ public class TimetableScraper extends Activity {
                         if(!"".equals(d)) {
                             duration = Integer.parseInt(d);
                         }
-
 
                         Lecture l = new Lecture(module, lecturer, room, day, hour, duration);
                         lectures.add(l);
@@ -216,92 +230,16 @@ public class TimetableScraper extends Activity {
             for(Lecture l : lectures){
                 Log.d("Lectures: ", l.toString());
             }
+            //Initliase timetable.
+            TimetableGenerator ttg = new TimetableGenerator(context, tl, lectures,days);
+            //Create table.
+            ttg.generateTable();
 
-            // Set default row count (random number)
-            int rowCount = -1;
-
-            LayoutInflater inflater = getLayoutInflater();
-
-            TableRow row = new TableRow(TimetableScraper.this);
-            TableRow.LayoutParams lp = new TableRow.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            //Add Headers to table
-            TextView header = new TextView(TimetableScraper.this);
-            header.setText(" ");
-            row.addView(header);
-            tl.addView(row);
-
-            for(int j=0; j<days.size(); j++){
-                tl.removeView(row);
-                header = new TextView(TimetableScraper.this);
-                header.setText(days.get(j));
-                header.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-                row.addView(header);
+            //If progress is still showing dismiss.
+            if(pd.isShowing()){
+                pd.dismiss();
             }
-            tl.addView(row);
 
-            // Add Lectures to table
-            for(int i=0; i<lectures.size(); i++){
-
-                    if((lectures.get(i).getHour()== rowCount)) {
-
-                        tl.removeView(row);
-
-                        //Inflate view. See lecture_view.xml
-                        View lv = (View) inflater.inflate(R.layout.lecture_view, row, false);
-
-                        //Add Module code info
-                        TextView moduleCode = (TextView) lv.findViewById(R.id.moduleCode);
-                        moduleCode.setText(lectures.get(i).getModuleCode());
-
-                        // Add lecturer info
-                        TextView lecturer = (TextView) lv.findViewById(R.id.lecturer);
-                        lecturer.setText(lectures.get(i).getLecturer());
-
-                        //Add room info
-                        TextView room = (TextView) lv.findViewById(R.id.room);
-                        Log.d("ROOMS: ", lectures.get(i).getRoom());
-                        room.setText(lectures.get(i).getRoom());
-
-                        row.addView(lv);
-                        tl.addView(row);
-
-                    }else {
-
-                        rowCount = lectures.get(i).getHour();
-                        row = new TableRow(TimetableScraper.this);
-                        row.setLayoutParams(lp);
-
-                        // Add row header.
-                        TextView hour = new TextView(TimetableScraper.this);
-                        hour.setText(Integer.toString(lectures.get(i).getHour()));
-                        hour.setHeight(200);
-
-                        //Inflate view. See lecture_view.xml
-                        View lv = (View) inflater.inflate(R.layout.lecture_view, row, false);
-
-                        //Add Module code info
-                        TextView moduleCode = (TextView) lv.findViewById(R.id.moduleCode);
-                        moduleCode.setText(lectures.get(i).getModuleCode());
-
-                        // Add lecturer info
-                        TextView lecturer = (TextView) lv.findViewById(R.id.lecturer);
-                        lecturer.setText(lectures.get(i).getLecturer());
-
-                        //Add room info
-                        TextView room = (TextView) lv.findViewById(R.id.room);
-                        Log.d("ROOMS: ", lectures.get(i).getRoom());
-                        room.setText(lectures.get(i).getRoom());
-
-                        //Add row
-                        row.addView(hour);
-                        row.addView(lv);
-                        tl.addView(row);
-                    }
-
-            }
-            // Clear arrays once added to calendar.
-            lectures.clear();
-            days.clear();
         }
     }
 
