@@ -141,11 +141,16 @@ public class TimetableScraper extends Activity {
         @Override
         protected Void doInBackground(String...params){
             try{
+
                 //Get passed date
                 String date = params[0];
                 //Update timetable URL.
                 String newUrl = ttUrl + date;
 
+                PerformLogin pl = new PerformLogin();
+                cookies = pl.performLogin();
+
+                /*
                 // HTTP Get request
                 Connection.Response getReq = Jsoup
                         .connect(baseUrl)
@@ -177,7 +182,7 @@ public class TimetableScraper extends Activity {
 
                 //Get new cookies after login
                 cookies = loginReq.cookies();
-
+                */
                 // Grab timetable page
                 Document htmlDoc = Jsoup
                         .connect(newUrl)
