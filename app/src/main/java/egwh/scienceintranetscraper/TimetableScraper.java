@@ -1,7 +1,7 @@
 package egwh.scienceintranetscraper;
 
 import android.app.Activity;
-import android.content.Context;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -9,11 +9,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.GridView;
-import android.widget.LinearLayout;
+import android.widget.Button;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
+import android.view.View.OnClickListener;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -22,9 +23,12 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
-import java.sql.Time;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.Map;
+
 
 /**
  * Created by eghar on 08/02/2017.
@@ -38,7 +42,6 @@ public class TimetableScraper extends Activity {
     final String userAgent = "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36";
     final private String next = "/intranet/";
 
-    private Intent intent;
     private String username;
     private String password;
     private String crsftoken;
@@ -50,32 +53,79 @@ public class TimetableScraper extends Activity {
     private ArrayList<Lecture> lectures = new ArrayList<Lecture>();
     private ArrayList<String> days = new ArrayList();
 
-    TableLayout tl;
+    private TableLayout tl;
+    private Calendar c;
+    private static int weeksFromToday = 0;
 
     public TimetableScraper(){
     }
 
-    /*
-    public void performLoginProcess(){
-        new performLogin().execute();
-    }*/
-
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.lecture_timetable);
+        setContentView(R.layout.timetable_scraper);
 
+        //Get data from parent intent
         Intent intent = getIntent();
         username = intent.getStringExtra("username");
         password = intent.getStringExtra("password");
 
-        //tl = (TableLayout)findViewById(R.id.lecture_timetable);
-        new performLogin().execute();
+        // Initialise TableLayout for timetable
+        tl = (TableLayout)findViewById(R.id.lecture_timetable);
+        new performLogin().execute("");
+
+
+        Button nextButton = (Button)findViewById(R.id.next_week_button);
+        Button prevButton = (Button)findViewById(R.id.previous_week_button);
+
+
+        nextButton.setOnClickListener(new OnClickListener(){
+            @Override
+            public void onClick(View view){
+                weeksFromToday = weeksFromToday +1;
+                String date = getWeek(weeksFromToday);
+                onResume(date);
+                Toast.makeText(TimetableScraper.this, getWeek(weeksFromToday), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        prevButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                weeksFromToday = weeksFromToday -1;
+                String date = getWeek(weeksFromToday);
+                onResume(date);
+                Toast.makeText(TimetableScraper.this, getWeek(weeksFromToday), Toast.LENGTH_SHORT).show();
+            }
+        });
+
     }
 
-    // Get the cookies required for login
-    private class performLogin extends AsyncTask<Void, Void, Void> {
+    public void onResume(String date){
+        super.onResume();
 
-        public Void doInBackground(Void...params){
+        new performLogin().execute(date);
+        // Clear table once loaded.
+        tl.invalidate();
+        tl.removeAllViews();
+    }
+
+    // Gets week
+    // weeksFromToday - Static int keeping track of weeks from current day.
+    private static String getWeek(int weeksFromToday){
+        Calendar c = new GregorianCalendar();
+        c.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+        c.set(Calendar.WEEK_OF_YEAR, c.get(Calendar.WEEK_OF_YEAR)+ weeksFromToday);
+
+        SimpleDateFormat df = new SimpleDateFormat("/yyyy/MM/dd");
+        String formattedDate = df.format(c.getTime());
+
+        return formattedDate;
+    }
+
+    // Performs log in and grabs data.
+    private class performLogin extends AsyncTask<String, Void, Void> {
+
+        protected Void doInBackground(String...params){
             try{
                 // HTTP Get request
                 Connection.Response getReq = Jsoup
@@ -88,7 +138,6 @@ public class TimetableScraper extends Activity {
 
                 // Strip crsftoken
                 crsftoken = cookies.get("csrftoken");
-
                 // Login Request
                 Connection.Response loginReq = Jsoup
                         .connect(loginUrl)
@@ -110,9 +159,14 @@ public class TimetableScraper extends Activity {
                 //Get new cookies after login
                 cookies = loginReq.cookies();
 
+
+                String date = params[0];
+                String newUrl = ttUrl + date;
+                Log.d("DATEEEEEEEEEEEEE", newUrl);
+
                 // Grab timetable page
                 Document htmlDoc = Jsoup
-                        .connect(ttUrl)
+                        .connect(newUrl)
                         .userAgent(userAgent)
                         .referrer("https://science.swansea.ac.uk/intranet/")
                         .cookies(cookies)
@@ -163,17 +217,13 @@ public class TimetableScraper extends Activity {
                 Log.d("Lectures: ", l.toString());
             }
 
-            //Initialise table
-            tl = (TableLayout)findViewById(R.id.lecture_timetable);
             // Set default row count (random number)
             int rowCount = -1;
 
             LayoutInflater inflater = getLayoutInflater();
 
             TableRow row = new TableRow(TimetableScraper.this);
-            TableRow.LayoutParams lp = new TableRow.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT);
-            //row.setWeightSum(1);
-
+            TableRow.LayoutParams lp = new TableRow.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             //Add Headers to table
             TextView header = new TextView(TimetableScraper.this);
             header.setText(" ");
@@ -184,6 +234,7 @@ public class TimetableScraper extends Activity {
                 tl.removeView(row);
                 header = new TextView(TimetableScraper.this);
                 header.setText(days.get(j));
+                header.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                 row.addView(header);
             }
             tl.addView(row);
@@ -194,9 +245,23 @@ public class TimetableScraper extends Activity {
                     if((lectures.get(i).getHour()== rowCount)) {
 
                         tl.removeView(row);
+
+                        //Inflate view. See lecture_view.xml
                         View lv = (View) inflater.inflate(R.layout.lecture_view, row, false);
+
+                        //Add Module code info
                         TextView moduleCode = (TextView) lv.findViewById(R.id.moduleCode);
                         moduleCode.setText(lectures.get(i).getModuleCode());
+
+                        // Add lecturer info
+                        TextView lecturer = (TextView) lv.findViewById(R.id.lecturer);
+                        lecturer.setText(lectures.get(i).getLecturer());
+
+                        //Add room info
+                        TextView room = (TextView) lv.findViewById(R.id.room);
+                        Log.d("ROOMS: ", lectures.get(i).getRoom());
+                        room.setText(lectures.get(i).getRoom());
+
                         row.addView(lv);
                         tl.addView(row);
 
@@ -206,21 +271,40 @@ public class TimetableScraper extends Activity {
                         row = new TableRow(TimetableScraper.this);
                         row.setLayoutParams(lp);
 
+                        // Add row header.
                         TextView hour = new TextView(TimetableScraper.this);
                         hour.setText(Integer.toString(lectures.get(i).getHour()));
                         hour.setHeight(200);
 
+                        //Inflate view. See lecture_view.xml
                         View lv = (View) inflater.inflate(R.layout.lecture_view, row, false);
+
+                        //Add Module code info
                         TextView moduleCode = (TextView) lv.findViewById(R.id.moduleCode);
                         moduleCode.setText(lectures.get(i).getModuleCode());
+
+                        // Add lecturer info
+                        TextView lecturer = (TextView) lv.findViewById(R.id.lecturer);
+                        lecturer.setText(lectures.get(i).getLecturer());
+
+                        //Add room info
+                        TextView room = (TextView) lv.findViewById(R.id.room);
+                        Log.d("ROOMS: ", lectures.get(i).getRoom());
+                        room.setText(lectures.get(i).getRoom());
+
+                        //Add row
                         row.addView(hour);
                         row.addView(lv);
                         tl.addView(row);
                     }
 
             }
-
+            // Clear arrays once added to calendar.
+            lectures.clear();
+            days.clear();
         }
     }
+
+
 
 }

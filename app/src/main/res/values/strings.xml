@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">ScienceIntranetScraper</string>
+
+
+
+    <!-- TimeTableScraper -->
+        <!-- Buttons -->
+        <string name="next_week_button">Next Week</string>
+        <string name="previous_week_button">Prev. Week</string>
 </resources>
