@@ -23,8 +23,6 @@ public class PerformLogin {
     private String crsftoken;
     private Map<String, String> cookies;
 
-    private Context context;
-
     public Map<String, String> performLogin() {
         try {
             // HTTP Get request
@@ -42,8 +40,8 @@ public class PerformLogin {
             Connection.Response loginReq = Jsoup
                     .connect(loginUrl)
                     .data("csrfmiddlewaretoken", crsftoken)
-                    .data("username", "789968")
-                    .data("password", "789968/17/04/1994")
+                    .data("username", "")
+                    .data("password", "")
                     .data("/next/", next)
                     .userAgent(userAgent)
                     .referrer("https://science.swansea.ac.uk/intranet/accounts/login/?next=/intranet/")

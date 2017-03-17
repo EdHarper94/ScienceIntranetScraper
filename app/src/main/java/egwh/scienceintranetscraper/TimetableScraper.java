@@ -3,28 +3,21 @@ package egwh.scienceintranetscraper;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TableLayout;
-import android.widget.TableRow;
-import android.widget.TextView;
 import android.widget.Toast;
 import android.view.View.OnClickListener;
 
-import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
-import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -38,25 +31,17 @@ import java.util.Map;
 
 public class TimetableScraper extends Activity {
 
-    final String baseUrl = "https://science.swansea.ac.uk/intranet/accounts/login/?next=/intranet/";
-    final String loginUrl = "https://science.swansea.ac.uk/intranet/accounts/login/";
     final String ttUrl = "https://science.swansea.ac.uk/intranet/attendance/timetable";
     final String userAgent = "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36";
-    final private String next = "/intranet/";
 
-    private String username;
-    private String password;
-    private String crsftoken;
     private Map<String, String> cookies;
 
-    private Elements els;
     private Element table;
 
     private ArrayList<Lecture> lectures = new ArrayList<Lecture>();
     private ArrayList<String> days = new ArrayList();
 
     private TableLayout tl;
-    private Calendar c;
     private static int weeksFromToday = 0;
 
     private Context context = TimetableScraper.this;
@@ -69,14 +54,9 @@ public class TimetableScraper extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.timetable_scraper);
 
-        //Get data from parent intent
-        Intent intent = getIntent();
-        username = intent.getStringExtra("username");
-        password = intent.getStringExtra("password");
-
         // Initialise TableLayout for timetable
         tl = (TableLayout)findViewById(R.id.lecture_timetable);
-        new performLogin().execute("");
+        new scrapeTimetable().execute("");
 
 
         Button nextButton = (Button)findViewById(R.id.next_week_button);
@@ -108,7 +88,7 @@ public class TimetableScraper extends Activity {
     public void onResume(String date){
         super.onResume();
 
-        new performLogin().execute(date);
+        new scrapeTimetable().execute(date);
         // Clear table once loaded.
         tl.invalidate();
         tl.removeAllViews();
@@ -128,7 +108,7 @@ public class TimetableScraper extends Activity {
     }
 
     // Performs log in and grabs data.
-    private class performLogin extends AsyncTask<String, Void, Void> {
+    private class scrapeTimetable extends AsyncTask<String, Void, Void> {
 
         @Override
         protected void onPreExecute(){
@@ -150,39 +130,6 @@ public class TimetableScraper extends Activity {
                 PerformLogin pl = new PerformLogin();
                 cookies = pl.performLogin();
 
-                /*
-                // HTTP Get request
-                Connection.Response getReq = Jsoup
-                        .connect(baseUrl)
-                        .method(Connection.Method.GET)
-                        .execute();
-
-                // Store cookies
-                cookies = getReq.cookies();
-
-                // Strip crsftoken
-                crsftoken = cookies.get("csrftoken");
-                // Login Request
-                Connection.Response loginReq = Jsoup
-                        .connect(loginUrl)
-                        .data("csrfmiddlewaretoken", crsftoken)
-                        .data("username", username)
-                        .data("password", password)
-                        .data("/next/", next)
-                        .userAgent(userAgent)
-                        .referrer("https://science.swansea.ac.uk/intranet/accounts/login/?next=/intranet/")
-                        .cookies(cookies)
-                        .method(Connection.Method.POST)
-                        .execute();
-
-                // Debug code //
-               Log.d("RESPONSE CODE: ", Integer.toString(loginReq.statusCode()));
-                //Document htmlDoc = loginReq.parse();
-
-
-                //Get new cookies after login
-                cookies = loginReq.cookies();
-                */
                 // Grab timetable page
                 Document htmlDoc = Jsoup
                         .connect(newUrl)
