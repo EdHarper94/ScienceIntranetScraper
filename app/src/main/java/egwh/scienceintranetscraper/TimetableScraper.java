@@ -58,10 +58,16 @@ public class TimetableScraper extends Activity {
         tl = (TableLayout)findViewById(R.id.lecture_timetable);
         new scrapeTimetable().execute("");
 
-
+        Button homeButton = (Button)findViewById(R.id.home_button);
         Button nextButton = (Button)findViewById(R.id.next_week_button);
         Button prevButton = (Button)findViewById(R.id.previous_week_button);
 
+        homeButton.setOnClickListener(new OnClickListener(){
+            @Override
+            public void onClick(View view){
+                goBack();
+            }
+        });
 
         nextButton.setOnClickListener(new OnClickListener(){
             @Override
@@ -195,6 +201,9 @@ public class TimetableScraper extends Activity {
         }
     }
 
+    private void goBack(){
+        finish();
+    }
 
 
 }

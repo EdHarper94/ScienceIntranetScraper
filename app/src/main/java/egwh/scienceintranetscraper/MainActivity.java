@@ -12,7 +12,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 
-        Intent intent = new Intent("com.egwh.scienceintranetscraper.TimetableScraper");
+        Intent intent = new Intent("com.egwh.scienceintranetscraper.HomeScreen");
         startActivity(intent);
 
     }

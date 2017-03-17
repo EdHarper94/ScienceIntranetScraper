@@ -3,30 +3,33 @@
     android:id="@+id/timetable_scraper"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
-    <LinearLayout
-        android:id="@+id/timetable_button_panel"
+    <Button
+        android:id="@+id/home_button"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-        <Button
-            android:id="@+id/previous_week_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/previous_week_button"/>
-        <Button
-            android:id="@+id/next_week_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/next_week_button"
-            />
-    </LinearLayout>
-
+        android:layout_height="wrap_content"
+        android:layout_gravity="left"
+        android:text="@string/home_button" />
+    <Button
+        android:id="@+id/next_week_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:text="@string/next_week_button" />
+    <Button
+        android:id="@+id/previous_week_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toStartOf="@+id/next_week_button"
+        android:text="@string/previous_week_button" />
     <ScrollView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:scrollbars="none"
         android:layout_weight="1"
         android:padding="10dp"
-        android:layout_below="@id/timetable_button_panel">
+        android:layout_below="@id/next_week_button">
         <HorizontalScrollView
             android:id="@+id/hScroll"
             android:layout_width="wrap_content"

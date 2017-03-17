@@ -1,7 +1,12 @@
 <resources>
     <string name="app_name">ScienceIntranetScraper</string>
 
+    <!-- Home Button -->
+    <string name="home_button">Home</string>
 
+    <!-- HomeScreen -->
+        <!-- Buttons -->
+        <string name="timetable_button">Timetable</string>
 
     <!-- TimeTableScraper -->
         <!-- Buttons -->

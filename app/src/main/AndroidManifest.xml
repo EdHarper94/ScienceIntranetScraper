@@ -16,6 +16,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".HomeScreen">
+            <intent-filter>
+                <action android:name="com.egwh.scienceintranetscraper.HomeScreen"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
         <activity android:name=".TimetableScraper">
             <intent-filter>
                 <action android:name="com.egwh.scienceintranetscraper.TimetableScraper"/>
