@@ -1,5 +1,6 @@
 package egwh.scienceintranetscraper;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -10,8 +11,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        TimetableScraper tts = new TimetableScraper("", "");
 
-        tts.performLoginProcess();
+        Intent intent = new Intent("com.egwh.scienceintranetscraper.TimetableScraper");
+        startActivity(intent);
+
     }
 }
