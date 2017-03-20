@@ -28,6 +28,18 @@
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
+        <activity android:name=".CourseworkMenu">
+            <intent-filter>
+                <action android:name="com.egwh.scienceintranetscraper.CourseworkMenu"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
+        <activity android:name=".CourseworkScraper">
+            <intent-filter>
+                <action android:name="com.egwh.scienceintranetscraper.CourseworkScraper"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

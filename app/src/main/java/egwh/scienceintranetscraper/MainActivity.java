@@ -15,5 +15,10 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent("com.egwh.scienceintranetscraper.HomeScreen");
         startActivity(intent);
 
+        /*
+        CourseworkScraper cs = new CourseworkScraper();
+        Intent intent = new Intent("com.egwh.scienceintranetscraper.CourseworkScraper");
+        startActivity(intent);
+        */
     }
 }

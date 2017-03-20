@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/coursework_menu"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <Button
+        android:id="@+id/coursework_menu_home_button"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:text="@string/home_button"/>
+    <Button
+        android:id="@+id/current_cw_button"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:text="@string/current_cw_button"/>
+    <Button
+        android:id="@+id/received_cw_button"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:text="@string/received_cw_button"/>
+    <Button
+        android:id="@+id/future_cw_button"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:text="@string/future_cw_button"/>
+</LinearLayout>

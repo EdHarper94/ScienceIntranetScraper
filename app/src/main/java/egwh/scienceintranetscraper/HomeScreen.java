@@ -16,12 +16,21 @@ public class HomeScreen extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home_screen);
 
-        Button ttbutton = (Button)findViewById(R.id.timetable_button);
+        Button tTButton = (Button)findViewById(R.id.timetable_button);
+        Button cWButton = (Button)findViewById(R.id.coursework_button);
 
-        ttbutton.setOnClickListener(new View.OnClickListener() {
+        tTButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent("com.egwh.scienceintranetscraper.TimetableScraper");
+                startActivity(intent);
+            }
+        });
+
+        cWButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent("com.egwh.scienceintranetscraper.CourseworkMenu");
                 startActivity(intent);
             }
         });

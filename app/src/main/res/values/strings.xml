@@ -5,11 +5,21 @@
     <string name="home_button">Home</string>
 
     <!-- HomeScreen -->
-        <!-- Buttons -->
-        <string name="timetable_button">Timetable</string>
+    <!-- Buttons -->
+    <string name="timetable_button">Timetable</string>
+    <string name="coursework_button">Courseworks</string>
 
     <!-- TimeTableScraper -->
-        <!-- Buttons -->
-        <string name="next_week_button">Next Week</string>
-        <string name="previous_week_button">Prev. Week</string>
+    <!-- Buttons -->
+    <string name="next_week_button">Next Week</string>
+    <string name="previous_week_button">Prev. Week</string>
+
+    <!-- Coursework Menu -->
+    <!-- Buttons -->
+    <string name="current_cw_button">Current Courseworks</string>
+    <string name="received_cw_button">Received Courseworks</string>
+    <string name="future_cw_button">Future Courseworks</string>
+    
+    <!-- CourseworkScraper -->
+    <string name="back_button">Back</string>
 </resources>
