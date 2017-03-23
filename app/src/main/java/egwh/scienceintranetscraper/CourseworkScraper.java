@@ -50,7 +50,7 @@ public class CourseworkScraper extends Activity {
     private TableLayout tl;
 
     private Context context = CourseworkScraper.this;
-    private PerformLogin pl;
+    private CookieStorage cookieStorage = new CookieStorage();
     private ProgressDialog pd;
 
     // Variables for courseworks //
@@ -310,10 +310,8 @@ public class CourseworkScraper extends Activity {
 
         protected Void doInBackground(Void... params) {
             try {
-                // Init login.
-                pl = new PerformLogin();
-                // Perform login and store cookies
-                cookies = pl.performLogin();
+
+                cookies = cookieStorage.getCookiesMap(url);
 
                 // Scrape the html page.
                 Document htmlDoc = Jsoup

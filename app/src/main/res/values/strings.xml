@@ -4,22 +4,28 @@
     <!-- Home Button -->
     <string name="home_button">Home</string>
 
-    <!-- HomeScreen -->
+    <!-- LOGIN SCREEN -->
+    <string name="login_title">Login</string>
+    <string name="username_input_field">Enter Username...</string>
+    <string name="password_input_field">Enter Password...</string>
+    <string name="login_button">Login</string>
+
+    <!-- HOME SCREEN -->
     <!-- Buttons -->
     <string name="timetable_button">Timetable</string>
     <string name="coursework_button">Courseworks</string>
 
-    <!-- TimeTableScraper -->
+    <!-- TIMETABLE SCRAPER -->
     <!-- Buttons -->
     <string name="next_week_button">Next Week</string>
     <string name="previous_week_button">Prev. Week</string>
 
-    <!-- Coursework Menu -->
+    <!-- COURSEWORK MENU-->
     <!-- Buttons -->
     <string name="current_cw_button">Current Courseworks</string>
     <string name="received_cw_button">Received Courseworks</string>
     <string name="future_cw_button">Future Courseworks</string>
     
-    <!-- CourseworkScraper -->
+    <!-- COURSEWORK SCRAPER-->
     <string name="back_button">Back</string>
 </resources>

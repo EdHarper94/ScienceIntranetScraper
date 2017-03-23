@@ -1,6 +1,6 @@
 package egwh.scienceintranetscraper;
 
-import android.content.Context;
+import android.os.AsyncTask;
 import android.util.Log;
 
 import org.jsoup.Connection;
@@ -14,7 +14,7 @@ import java.util.Map;
  * Created by eghar on 09/03/2017.
  */
 
-public class PerformLogin {
+public class PerformLogin extends AsyncTask<Void, Void, Void> {
     final String baseUrl = "https://science.swansea.ac.uk/intranet/accounts/login/?next=/intranet/";
     final String loginUrl = "https://science.swansea.ac.uk/intranet/accounts/login/";
     final String userAgent = "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36";
@@ -23,7 +23,20 @@ public class PerformLogin {
     private String crsftoken;
     private Map<String, String> cookies;
 
-    public Map<String, String> performLogin() {
+    private CookieStorage cookieStorage = new CookieStorage();
+
+    private String username;
+    private String password;
+
+    private Exception exception;
+
+    public PerformLogin(String username, String password){
+        this.username = username;
+        this.password = password;
+    }
+
+    public Void doInBackground(Void...params){
+
         try {
             // HTTP Get request
             Connection.Response getReq = Jsoup
@@ -40,8 +53,8 @@ public class PerformLogin {
             Connection.Response loginReq = Jsoup
                     .connect(loginUrl)
                     .data("csrfmiddlewaretoken", crsftoken)
-                    .data("username", "")
-                    .data("password", "")
+                    .data("username", username)
+                    .data("password", password)
                     .data("/next/", next)
                     .userAgent(userAgent)
                     .referrer("https://science.swansea.ac.uk/intranet/accounts/login/?next=/intranet/")
@@ -53,19 +66,24 @@ public class PerformLogin {
             Log.d("RESPONSE CODE: ", Integer.toString(loginReq.statusCode()));
             //Document htmlDoc = loginReq.parse();
 
-            //Get new cookies after login
+
             cookies = loginReq.cookies();
+            //Store cookies
+            cookieStorage.storeCookies(cookies, loginUrl);
 
 
-            for (Map.Entry<String, String> entry : cookies.entrySet()) {
-                String key = entry.getKey();
-                String value = entry.getValue();
-                Log.d("COOOOKIIIESSSSS", key + value);
-            }
+            System.out.println(cookies);
 
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception e){
+            this.exception = e;
         }
-        return cookies;
+        return null;
+    }
+
+    protected void onPostExecute(Void result){
+        if(exception != null) {
+            System.out.println("ERROR LOGGING IN " + exception);
+            exception.printStackTrace();
+        }
     }
 }

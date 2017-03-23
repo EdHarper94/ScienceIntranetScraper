@@ -46,6 +46,7 @@ public class TimetableScraper extends Activity {
 
     private Context context = TimetableScraper.this;
     private ProgressDialog pd;
+    private CookieStorage cookieStorage = new CookieStorage();
 
     public TimetableScraper(){
     }
@@ -133,8 +134,8 @@ public class TimetableScraper extends Activity {
                 //Update timetable URL.
                 String newUrl = ttUrl + date;
 
-                PerformLogin pl = new PerformLogin();
-                cookies = pl.performLogin();
+                // Get cookies from cookie store
+                cookies = cookieStorage.getCookiesMap(ttUrl);
 
                 // Grab timetable page
                 Document htmlDoc = Jsoup
@@ -177,7 +178,6 @@ public class TimetableScraper extends Activity {
             }catch(IOException e){
                 e.printStackTrace();
             }
-
             return null;
         }
 
