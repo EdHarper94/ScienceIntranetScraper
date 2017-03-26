@@ -60,6 +60,13 @@ public class CookieStorage {
     }
 
     /**
+     * Removes cookies from storage
+     */
+    public void removeCookies(){
+        hostCookieMap.clear();
+    }
+
+    /**
      * Converts String url to URI for cookie storage
      * @param stringUrl the url in string format
      * @return URI host

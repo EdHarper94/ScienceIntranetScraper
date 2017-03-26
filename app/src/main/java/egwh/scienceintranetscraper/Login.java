@@ -1,14 +1,12 @@
 package egwh.scienceintranetscraper;
 
-
-
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 /**
  * Created by eghar on 22/03/2017.
@@ -28,16 +26,29 @@ public class Login extends Activity {
             public void onClick(View view) {
                 String username = usernameField.getText().toString();
                 String password = passwordField.getText().toString();
-                if(username != null && password != null){
-                    Intent returnIntent = new Intent();
-                    Bundle data = new Bundle();
 
-                    data.putString("username", username);
-                    data.putString("password", password);
-
-                    returnIntent.putExtras(data);
-                    setResult(Activity.RESULT_OK, returnIntent);
-                    finish();
+                // Check fields have something in them
+                if(username.equals("") || password.equals("")) {
+                    Toast.makeText(getApplicationContext(), "Please enter your username and password.", Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    // Perform login with entered username and password
+                    PerformLogin pl = new PerformLogin(username, password, new PerformLogin.PerformLoginResponse() {
+                        @Override
+                        // Check the result
+                        public void loginFinished(String result) {
+                            if (result.equals("LOGIN_FAIL")) {
+                                Toast.makeText(getApplicationContext(), "Incorrect username/password. Please try again.", Toast.LENGTH_SHORT).show();
+                            } else if (result.equals("CONNECTION_FAIL")){
+                                Toast.makeText(getApplicationContext(), "Currently unable to connect to server. Please try again later.", Toast.LENGTH_SHORT).show();
+                            }
+                            else{
+                                // If succesful login continue to home screen
+                                Intent menuIntent = new Intent("com.egwh.scienceintranetscraper.HomeScreen");
+                                startActivity(menuIntent);
+                            }
+                        }});
+                    pl.execute();
                 }
             }
         });
