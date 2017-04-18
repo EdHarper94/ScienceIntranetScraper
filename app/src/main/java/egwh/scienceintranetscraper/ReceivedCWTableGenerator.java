@@ -56,7 +56,7 @@ public class ReceivedCWTableGenerator {
             row.addView(header);
         }
         // Add headings to table
-        tl.addView(row);
+        tl.addView(row, new TableLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
         // Add a row for each coursework
         for(int i=0; i<courseworks.size(); i++){
