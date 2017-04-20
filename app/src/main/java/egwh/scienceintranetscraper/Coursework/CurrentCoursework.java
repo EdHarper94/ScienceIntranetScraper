@@ -3,13 +3,25 @@ package egwh.scienceintranetscraper.Coursework;
 import java.util.Date;
 
 /**
- * Created by eghar on 19/03/2017.
+ * @file CurrentCoursework.java
+ * @author Ed Harper
+ * @date 19/03/2013
+ *
+ * Current Coursework object class for holding and maintaining current coursework data
  */
 
 public class CurrentCoursework extends Coursework{
     private String lecturer;
     private Date feedbackDate;
 
+    /**
+     * Initialises current coursework object
+     * @param lecturer coursework lecturer
+     * @param feedbackDate coursework feedback date
+     * @param moduleCode coursework module code
+     * @param title coursework title
+     * @param deadlineDate coursework deadline
+     */
     public CurrentCoursework(String lecturer, Date feedbackDate, String moduleCode, String title, Date deadlineDate){
         super(moduleCode, title, deadlineDate);
         this.lecturer = lecturer;

@@ -14,7 +14,11 @@ import java.util.ArrayList;
 import static android.view.Gravity.CENTER;
 
 /**
- * Created by eghar on 19/03/2017.
+ * @file CurrentCWTableGenerator.java
+ * @author Ed Harper
+ * @date 19/03/2017
+ *
+ * Generates Table Layout for passed Currents Courseworks
  */
 
 public class CurrentCWTableGenerator {
@@ -25,6 +29,16 @@ public class CurrentCWTableGenerator {
     private ArrayList<CurrentCoursework> courseworks = new ArrayList<>();
     private ArrayList<String> headings = new ArrayList<>();
 
+    private final DateFormat DATE_FORMAT = CourseworkGlobals.DATE_FORMAT;
+    private final DateFormat DATE_TIME_FORMAT = CourseworkGlobals.DATE_TIME_FORMAT;
+
+    /**
+     * Initialises current coursework table generator
+     * @param context passed context
+     * @param tl passed table layout
+     * @param courseworks passed courseworks
+     * @param headings passed headings
+     */
     public CurrentCWTableGenerator(Context context, TableLayout tl, ArrayList<CurrentCoursework> courseworks, ArrayList<String> headings){
         this.context = context;
         this.tl = tl;
@@ -47,8 +61,6 @@ public class CurrentCWTableGenerator {
 
         // Add all headings to heading row
         for(int j=0; j<headings.size(); j++){
-
-            Log.d("headings", headings.get(j));
             tl.removeView(row);
             TextView header = new TextView(context);
             header.setText(headings.get(j));
@@ -85,16 +97,14 @@ public class CurrentCWTableGenerator {
 
             // Add deadline date
             TextView dDate = new TextView(context);
-            DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-            String date = df.format(courseworks.get(i).getDeadlineDate());
+            String date = DATE_TIME_FORMAT.format(courseworks.get(i).getDeadlineDate());
             dDate.setText(date);
             dDate.setLayoutParams(lp);
             dDate.setGravity(CENTER);
 
             // Add feedback date
             TextView fDate = new TextView(context);
-            df = new SimpleDateFormat("dd/MM/yyyy");
-            date = df.format(courseworks.get(i).getFeedbackDate());
+            date = DATE_FORMAT.format(courseworks.get(i).getFeedbackDate());
             fDate.setText(date);
             fDate.setLayoutParams(lp);
             fDate.setGravity(CENTER);

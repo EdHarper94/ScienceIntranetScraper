@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TableLayout;
@@ -36,11 +35,27 @@ import egwh.scienceintranetscraper.R;
  */
 
 public class CourseworkScraper extends Activity {
-    final String url = "https://science.swansea.ac.uk/intranet/submission/coursework";
-    final String userAgent = "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36";
+    final String URL = "https://science.swansea.ac.uk/intranet/submission/coursework";
+    final String BASE_URL = "https://science.swansea.ac.uk/intranet/";
+    final String USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36";
 
     private final String NO_COURSEWORKS = "No Courseworks available.";
     private final String CONNECTION_ERROR = "Could not connect, Please try again later";
+
+    // HTML scraping selectors
+    private final String PAGE_CONTENTS = "pagecontent";
+    private final String TABLE = "table";
+    private final String TABLE_HEADING = "th";
+    private final String TABLE_ROW = "tr";
+    private final String TABLE_CELL = "td";
+    private final String ON_TIME = "On time";
+    private final String LATE = "Late";
+
+    // Coursework type identifiers
+    private final String TYPE = CourseworkGlobals.TYPE;
+    private final String CURRENT_CW = CourseworkGlobals.CURRENT_CW;
+    private final String RECEIVED_CW = CourseworkGlobals.RECEIVED_CW;
+    private final String FUTURE_CW = CourseworkGlobals.FUTURE_CW;
 
     private Map<String, String> cookies;
 
@@ -95,7 +110,7 @@ public class CourseworkScraper extends Activity {
         });
 
         Intent intent = getIntent();
-        type = intent.getStringExtra("type");
+        type = intent.getStringExtra(TYPE);
 
     }
 
@@ -106,23 +121,21 @@ public class CourseworkScraper extends Activity {
      */
     private void currentCoursework(Element page){
         try {
-            table = page.select("table").get(0);
-            Log.d("table: ", table.text());
+            table = page.select(TABLE).get(0);
 
             // Get headings
-            Elements heading = table.select("th");
+            Elements heading = table.select(TABLE_HEADING);
             for (Element e : heading) {
                 headings.add(e.text());
             }
 
             // Select rows
-            Elements rows = table.select("tr");
+            Elements rows = table.select(TABLE_ROW);
 
             // Loop through rows
             for (int i = 1; i < rows.size(); i++) {
-                Log.d("ROWS: ", rows.get(i).text());
                 // Select cells
-                Elements cells = rows.get(i).select("td");
+                Elements cells = rows.get(i).select(TABLE_CELL);
 
                 //Loop through each cell on each row
                 for (int j = 0; j < cells.size(); j++) {
@@ -145,7 +158,6 @@ public class CourseworkScraper extends Activity {
                             // Get feedback date
                             String fdate = cells.get(j).text();
                             fd = formatDate(fdate);
-                            Log.d("FEEDBACK", fdate);
                         } catch (java.text.ParseException e) {
                             e.printStackTrace();
                         }
@@ -168,23 +180,22 @@ public class CourseworkScraper extends Activity {
      */
     protected void receivedCoursework(Element page){
         try{
-            table = page.select("table").get(1);
+            table = page.select(TABLE).get(1);
 
             // Get headings
-            Elements heading = table.select("th");
+            Elements heading = table.select(TABLE_HEADING);
             for(Element e : heading){
                 headings.add(e.text());
             }
 
             // Select rows
-            Elements rows = table.select("tr");
+            Elements rows = table.select(TABLE_ROW);
 
             // Loop through rows
             for(int i=1; i<rows.size(); i++) {
-                Log.d("ROWS: ", rows.get(i).text());
 
                 // Select cells
-                Elements cells = rows.get(i).select("td");
+                Elements cells = rows.get(i).select(TABLE_CELL);
 
                 //Loop through each cell on each row
                 for (int j = 0; j < cells.size(); j++) {
@@ -203,9 +214,9 @@ public class CourseworkScraper extends Activity {
                     } else if (j == 3) {
                         // Get received on time identifier and trim
                         String identifier = cells.get(j).text().trim();
-                        if (identifier.equals("On time")) {
+                        if (identifier.equals(ON_TIME)) {
                             received = ReceivedCoursework.Received.ON_TIME;
-                        } else if (identifier.equals("Late")) {
+                        } else if (identifier.equals(LATE)) {
                             received = ReceivedCoursework.Received.LATE;
                         } else {
                             received = ReceivedCoursework.Received.NO;
@@ -214,8 +225,7 @@ public class CourseworkScraper extends Activity {
                         // Get feedback Date
                         try {
                             String fdate = cells.get(j).text();
-                            fd = formatDate(fdate);
-                            Log.d("FEEDBACK", fdate);
+                            fd = formatDate(fdate);;
                         } catch (java.text.ParseException e) {
                             e.printStackTrace();
                         }
@@ -238,22 +248,21 @@ public class CourseworkScraper extends Activity {
      */
     private void futureCoursework(Element page){
         try{
-            table = page.select("table").get(2);
+            table = page.select(TABLE).get(2);
 
             // Get headings
-            Elements heading = table.select("th");
+            Elements heading = table.select(TABLE_HEADING);
             for(Element e : heading){
                 headings.add(e.text());
             }
 
             // Select rows
-            Elements rows = table.select("tr");
+            Elements rows = table.select(TABLE_ROW);
 
             // Loop through rows
             for(int i=1; i<rows.size(); i++) {
-                Log.d("ROWS: ", rows.get(i).text());
                 // Select cells
-                Elements cells = rows.get(i).select("td");
+                Elements cells = rows.get(i).select(TABLE_CELL);
 
                 // Loop through each cell on each row
                 for (int j = 0; j < cells.size(); j++) {
@@ -334,34 +343,27 @@ public class CourseworkScraper extends Activity {
         protected Void doInBackground(Void... params) {
             try {
 
-                cookies = cookieStorage.getCookiesMap(url);
+                cookies = cookieStorage.getCookiesMap(BASE_URL);
 
                 // Scrape the html page.
                 Document htmlDoc = Jsoup
-                        .connect(url)
-                        .userAgent(userAgent)
+                        .connect(URL)
+                        .userAgent(USER_AGENT)
                         .cookies(cookies)
-                        .referrer("https://science.swansea.ac.uk/intranet/")
+                        .referrer(BASE_URL)
                         .get();
 
-                Log.d("RESPONSE", htmlDoc.text());
-
                 // Trim the content
-                Element page = htmlDoc.getElementById("pagecontent");
-
-                if(page != null){
-                    Log.d("Page:", page.text());
-                }
+                Element page = htmlDoc.getElementById(PAGE_CONTENTS);
 
                 // Coursework we are looking for
-                if(type.equals("c")){
+                if(type.equals(CURRENT_CW)){
                     currentCoursework(page);
-                }else if(type.equals("r")){
+                }else if(type.equals(RECEIVED_CW)){
                     receivedCoursework(page);
-                }else if(type.equals("f")){
+                }else if(type.equals(FUTURE_CW)){
                     futureCoursework(page);
                 }
-
 
             } catch (Exception e) {
                 this.scrapeException = e;
@@ -377,16 +379,17 @@ public class CourseworkScraper extends Activity {
         protected void onPostExecute(Void result) {
             if (scrapeException != null) {
                 Toast.makeText(context, CONNECTION_ERROR, Toast.LENGTH_LONG).show();
+                scrapeException.printStackTrace();
             }
 
             if (exception == null) {
-                if (type.equals("c") && cCourseworks != null) {
+                if (type.equals(CURRENT_CW) && cCourseworks != null) {
                     CurrentCWTableGenerator ctg = new CurrentCWTableGenerator(context, tl, cCourseworks, headings);
                     ctg.generateCWTable();
-                } else if (type.equals("r") && rCourseworks != null) {
+                } else if (type.equals(RECEIVED_CW) && rCourseworks != null) {
                     ReceivedCWTableGenerator rtg = new ReceivedCWTableGenerator(context, tl, rCourseworks, headings);
                     rtg.generateCWTable();
-                } else if (type.equals("f") && fCourseworks != null) {
+                } else if (type.equals(FUTURE_CW) && fCourseworks != null) {
                     FutureCWTableGenerator ftg = new FutureCWTableGenerator(context, tl, fCourseworks, headings);
                     ftg.generateCWTable();
                 } else {
