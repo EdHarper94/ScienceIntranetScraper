@@ -19,7 +19,7 @@ public class MainActivity extends AppCompatActivity {
 
         /*
         // DEBUG CODE (development)
-        PerformLogin pl = new PerformLogin("789968", "789968/17/04/1994", new PerformLogin.PerformLoginResponse() {
+        PerformLogin pl = new PerformLogin("", "", new PerformLogin.PerformLoginResponse() {
             @Override
             // Check the result
             public void loginFinished(String result) {
