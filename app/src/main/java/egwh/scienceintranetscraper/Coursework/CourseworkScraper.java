@@ -1,4 +1,4 @@
-package egwh.scienceintranetscraper;
+package egwh.scienceintranetscraper.Coursework;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -17,7 +17,6 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -25,6 +24,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
+
+import egwh.scienceintranetscraper.Login.CookieStorage;
+import egwh.scienceintranetscraper.R;
 
 /**
  * Created by eghar on 17/03/2017.

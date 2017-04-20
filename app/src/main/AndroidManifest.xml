@@ -16,7 +16,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Login">
+        <activity android:name=".Login.Login">
             <intent-filter>
                 <action android:name="com.egwh.scienceintranetscraper.Login"/>
                 <category android:name="android.intent.category.DEFAULT"/>
@@ -28,25 +28,25 @@
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
-        <activity android:name=".TimetableScraper">
+        <activity android:name=".Timetable.TimetableScraper">
             <intent-filter>
                 <action android:name="com.egwh.scienceintranetscraper.TimetableScraper"/>
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
-        <activity android:name=".CourseworkMenu">
+        <activity android:name=".Coursework.CourseworkMenu">
             <intent-filter>
                 <action android:name="com.egwh.scienceintranetscraper.CourseworkMenu"/>
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
-        <activity android:name=".CourseworkScraper">
+        <activity android:name=".Coursework.CourseworkScraper">
             <intent-filter>
                 <action android:name="com.egwh.scienceintranetscraper.CourseworkScraper"/>
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
-        <activity android:name=".StaffHoursScraper">
+        <activity android:name=".StaffOfficeHours.StaffHoursScraper">
             <intent-filter>
                 <action android:name="com.egwh.scienceintranetscraper.StaffHoursScraper"/>
                 <category android:name="android.intent.category.DEFAULT"/>

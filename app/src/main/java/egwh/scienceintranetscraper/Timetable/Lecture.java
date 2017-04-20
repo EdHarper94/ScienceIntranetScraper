@@ -1,4 +1,4 @@
-package egwh.scienceintranetscraper;
+package egwh.scienceintranetscraper.Timetable;
 
 /**
  * Created by eghar on 21/02/2017.

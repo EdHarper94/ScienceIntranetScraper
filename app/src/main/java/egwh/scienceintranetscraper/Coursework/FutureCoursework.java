@@ -1,4 +1,4 @@
-package egwh.scienceintranetscraper;
+package egwh.scienceintranetscraper.Coursework;
 
 import java.util.Date;
 

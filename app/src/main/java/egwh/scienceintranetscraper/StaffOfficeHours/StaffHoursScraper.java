@@ -1,4 +1,4 @@
-package egwh.scienceintranetscraper;
+package egwh.scienceintranetscraper.StaffOfficeHours;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -19,6 +19,9 @@ import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
 import java.util.Map;
+
+import egwh.scienceintranetscraper.Login.CookieStorage;
+import egwh.scienceintranetscraper.R;
 
 /**
  * @file StaffHoursScraper.java

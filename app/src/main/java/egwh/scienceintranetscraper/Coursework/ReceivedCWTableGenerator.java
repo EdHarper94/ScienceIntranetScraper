@@ -1,8 +1,8 @@
-package egwh.scienceintranetscraper;
+package egwh.scienceintranetscraper.Coursework;
 
 import android.content.Context;
 import android.util.Log;
-import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -17,15 +17,15 @@ import static android.view.Gravity.CENTER;
  * Created by eghar on 19/03/2017.
  */
 
-public class FutureCWTableGenerator {
+public class ReceivedCWTableGenerator {
 
     private Context context;
     private TableLayout tl;
 
-    private ArrayList<FutureCoursework> courseworks = new ArrayList<>();
+    private ArrayList<ReceivedCoursework> courseworks = new ArrayList<>();
     private ArrayList<String> headings = new ArrayList<>();
 
-    public FutureCWTableGenerator(Context context, TableLayout tl, ArrayList<FutureCoursework> courseworks, ArrayList<String> headings){
+    public ReceivedCWTableGenerator(Context context, TableLayout tl, ArrayList<ReceivedCoursework> courseworks, ArrayList<String> headings){
         this.context = context;
         this.tl = tl;
         this.courseworks = courseworks;
@@ -33,9 +33,9 @@ public class FutureCWTableGenerator {
     }
 
     /**
-     * Sorts FutureCoursework and generates their table
+     * Sorts ReceivedCourseworks and generates their table
      * @return the generated TableLayout
-     * @see FutureCoursework
+     * @see ReceivedCoursework
      */
     public TableLayout generateCWTable(){
 
@@ -45,23 +45,21 @@ public class FutureCWTableGenerator {
         TableRow.LayoutParams lp = new TableRow.LayoutParams(300, 200);
         lp.setMargins(5,10,5,10);
 
-        // Add all headings to row
+        // Add all headings row
         for(int j=0; j<headings.size(); j++){
             Log.d("headings", headings.get(j));
             tl.removeView(row);
             TextView header = new TextView(context);
             header.setText(headings.get(j));
-            header.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-            row.setGravity(CENTER);
+            header.setGravity(CENTER);
             row.addView(header);
         }
         // Add headings to table
-        tl.addView(row);
+        tl.addView(row, new TableLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
         // Add a row for each coursework
         for(int i=0; i<courseworks.size(); i++){
             row = new TableRow(context);
-
 
             // Add module code
             TextView moduleCode = new TextView(context);
@@ -70,43 +68,44 @@ public class FutureCWTableGenerator {
             moduleCode.setLayoutParams(lp);
             moduleCode.setGravity(CENTER);
 
-            // Add lecturer text
-            TextView lecturer = new TextView(context);
-            lecturer.setText(courseworks.get(i).getLecturer());
-            lecturer.setLayoutParams(lp);
-            lecturer.setGravity(CENTER);
-
             // Add title text
             TextView title = new TextView(context);
             title.setText(courseworks.get(i).getTitle());
             title.setLayoutParams(lp);
             title.setGravity(CENTER);
 
-            // Add set date
-            TextView sDate = new TextView(context);
-            DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-            String date = df.format(courseworks.get(i).getSetDate());
-            sDate.setText(date);
-            sDate.setLayoutParams(lp);
-            sDate.setGravity(CENTER);
-
             // Add deadline date
             TextView dDate = new TextView(context);
-            df = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-            date = df.format(courseworks.get(i).getDeadlineDate());
+            DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+            String date = df.format(courseworks.get(i).getDeadlineDate());
             dDate.setText(date);
             dDate.setLayoutParams(lp);
             dDate.setGravity(CENTER);
 
+            // Add received identifier
+            TextView received = new TextView(context);
+            received.setText(courseworks.get(i).getReceived());
+            received.setLayoutParams(lp);
+            received.setGravity(CENTER);
+
+            // Add feedback date
+            TextView fDate = new TextView(context);
+            df = new SimpleDateFormat("dd/MM/yyyy");
+            date = df.format(courseworks.get(i).getFeedbackDate());
+            fDate.setText(date);
+            fDate.setLayoutParams(lp);
+            fDate.setGravity(CENTER);
+
             // Add Views to row
             row.addView(moduleCode);
-            row.addView(lecturer);
             row.addView(title);
-            row.addView(sDate);
             row.addView(dDate);
+            row.addView(received);
+            row.addView(fDate);
 
             // Add row to table
             tl.addView(row);
+
         }
         // Return generated table
         return tl;

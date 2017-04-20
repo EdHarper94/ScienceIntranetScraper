@@ -1,4 +1,4 @@
-package egwh.scienceintranetscraper;
+package egwh.scienceintranetscraper.Coursework;
 
 import android.content.Context;
 import android.util.Log;

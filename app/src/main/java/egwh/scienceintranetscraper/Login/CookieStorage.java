@@ -1,4 +1,4 @@
-package egwh.scienceintranetscraper;
+package egwh.scienceintranetscraper.Login;
 
 import java.net.MalformedURLException;
 import java.net.URI;

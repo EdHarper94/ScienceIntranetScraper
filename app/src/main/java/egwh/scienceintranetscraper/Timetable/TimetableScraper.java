@@ -1,4 +1,4 @@
-package egwh.scienceintranetscraper;
+package egwh.scienceintranetscraper.Timetable;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -23,6 +23,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Map;
+
+import egwh.scienceintranetscraper.Login.CookieStorage;
+import egwh.scienceintranetscraper.R;
 
 
 /**

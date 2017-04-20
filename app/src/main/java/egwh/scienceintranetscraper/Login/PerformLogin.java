@@ -1,16 +1,12 @@
-package egwh.scienceintranetscraper;
+package egwh.scienceintranetscraper.Login;
 
 import android.os.AsyncTask;
-import android.util.Log;
-import android.widget.Toast;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
-import java.io.IOException;
-import java.net.UnknownHostException;
 import java.util.Map;
 
 
