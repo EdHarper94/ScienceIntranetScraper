@@ -1,9 +1,11 @@
 package egwh.scienceintranetscraper.Timetable;
 
 /**
- * Created by eghar on 21/02/2017.
+ * @file Lecture.java
+ * @author Ed harper
+ * @date 21/02/2017#
  *
- * Lecture - Lecture class describing a lecture object.
+ * Lecture object storing and maintaining lecture data
  */
 
 public class Lecture {
@@ -14,6 +16,15 @@ public class Lecture {
     private int hour;
     private int duration;
 
+    /**
+     * Initialises lecture object
+     * @param moduleCode the module code
+     * @param lecturer the lecturer for this lecture
+     * @param room the room for the lecture
+     * @param day the day of the lecture
+     * @param hour the hour of the lecture
+     * @param duration the duration of the lecture
+     */
     public Lecture(String moduleCode, String lecturer, String room, int day, int hour, int duration){
         this.moduleCode = moduleCode;
         this.lecturer = lecturer;
@@ -49,26 +60,6 @@ public class Lecture {
 
     public void setModuleCode(String moduleCode){
         this. moduleCode = moduleCode;
-    }
-
-    public void setLecturer(String lecturer){
-        this.lecturer = lecturer;
-    }
-
-    public void setRoom(String room) {
-        this.room = room;
-    }
-
-    public void setDay(int day){
-        this.day = day;
-    }
-
-    public void setHour(int hour){
-        this.hour = hour;
-    }
-
-    public void setDuration(int duration){
-        this.duration = duration;
     }
 
     public String toString(){

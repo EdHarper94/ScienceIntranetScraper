@@ -14,16 +14,28 @@ import java.util.ArrayList;
 import egwh.scienceintranetscraper.R;
 
 /**
- * Created by eghar on 09/03/2017.
+ * @file TimetableGenerator
+ * @author Ed harper
+ * @date 09/03/2017
+ *
+ * Generates timetable from passed data and returns it to UI
  */
 
 public class TimetableGenerator {
 
     private Context context;
     private TableLayout tl;
+
     private ArrayList<Lecture> lectures = new ArrayList<Lecture>();
     private ArrayList<String> days = new ArrayList();
 
+    /**
+     * Initialises TimetableGenerator
+     * @param context the calling context
+     * @param tl the passed table layout to update
+     * @param lectures the passed lecture data
+     * @param days the passed days headings
+     */
     public TimetableGenerator(Context context, TableLayout tl, ArrayList<Lecture> lectures, ArrayList<String> days){
         this.context = context;
         this.tl = tl;
@@ -32,9 +44,13 @@ public class TimetableGenerator {
     }
 
 
+    /**
+     * Generates time table
+     * @return the table layout
+     */
     public TableLayout generateTable(){
 
-        // Set default row count (random number)
+        // Set default row count (init to unreachable int)
         int rowCount = -1;
 
         LayoutInflater inflater = (LayoutInflater) context.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
@@ -47,6 +63,7 @@ public class TimetableGenerator {
         row.addView(header);
         tl.addView(row);
 
+        // Loop through headings and add to row
         for(int j=0; j<days.size(); j++){
             tl.removeView(row);
             header = new TextView(context);
@@ -59,6 +76,7 @@ public class TimetableGenerator {
         // Add Lectures to table
         for(int i=0; i<lectures.size(); i++){
 
+            // Check to see if we need a new row
             if((lectures.get(i).getHour()== rowCount)) {
 
                 tl.removeView(row);
