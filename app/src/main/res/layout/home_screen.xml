@@ -7,11 +7,15 @@
         android:id="@+id/timetable_button"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:text="@string/timetable_button"
-        />
+        android:text="@string/timetable_button"/>
     <Button
         android:id="@+id/coursework_button"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:text="@string/coursework_button"/>
+    <Button
+        android:id="@+id/staff_hours_button"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:text="@string/staff_hours_button"/>
 </LinearLayout>

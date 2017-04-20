@@ -14,6 +14,7 @@
     <!-- Buttons -->
     <string name="timetable_button">Timetable</string>
     <string name="coursework_button">Courseworks</string>
+    <string name="staff_hours_button">Staff Office Hours</string>
 
     <!-- TIMETABLE SCRAPER -->
     <!-- Buttons -->
@@ -28,4 +29,7 @@
     
     <!-- COURSEWORK SCRAPER-->
     <string name="back_button">Back</string>
+
+    <!-- HOURS SCRAPER -->
+    <string name="hours_title_view">Staff Office Hours List:</string>
 </resources>

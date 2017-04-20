@@ -46,6 +46,12 @@
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
+        <activity android:name=".StaffHoursScraper">
+            <intent-filter>
+                <action android:name="com.egwh.scienceintranetscraper.StaffHoursScraper"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

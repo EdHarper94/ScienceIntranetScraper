@@ -18,6 +18,7 @@ public class HomeScreen extends Activity {
 
         Button tTButton = (Button)findViewById(R.id.timetable_button);
         Button cWButton = (Button)findViewById(R.id.coursework_button);
+        Button sHButton = (Button)findViewById(R.id.staff_hours_button);
 
         tTButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -31,6 +32,14 @@ public class HomeScreen extends Activity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent("com.egwh.scienceintranetscraper.CourseworkMenu");
+                startActivity(intent);
+            }
+        });
+
+        sHButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent("com.egwh.scienceintranetscraper.StaffHoursScraper");
                 startActivity(intent);
             }
         });
