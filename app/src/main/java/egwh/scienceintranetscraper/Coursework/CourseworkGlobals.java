@@ -2,7 +2,6 @@ package egwh.scienceintranetscraper.Coursework;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
 /**
  * @file CourseworkGlobals.java

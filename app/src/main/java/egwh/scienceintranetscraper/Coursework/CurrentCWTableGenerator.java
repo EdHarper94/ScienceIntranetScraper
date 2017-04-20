@@ -1,14 +1,12 @@
 package egwh.scienceintranetscraper.Coursework;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.View;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import static android.view.Gravity.CENTER;
