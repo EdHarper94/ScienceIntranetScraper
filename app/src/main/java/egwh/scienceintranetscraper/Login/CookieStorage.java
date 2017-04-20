@@ -8,7 +8,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by eghar on 22/03/2017.
+ * @file CookieStorage.java
+ * @author Ed Harper
+ * @date 22/03/2017
+ *
+ * A lightweight cookie store for JSoup requests
  */
 
 public class CookieStorage {

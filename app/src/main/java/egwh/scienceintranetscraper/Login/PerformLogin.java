@@ -11,7 +11,11 @@ import java.util.Map;
 
 
 /**
- * Created by eghar on 09/03/2017.
+ * @file PerformLogin.java
+ * @author Ed Harper
+ * @date 09/03/2017
+ *
+ * Performs login and gets cookies for cookie store
  */
 
 public class PerformLogin extends AsyncTask<Void, Void, String> {
@@ -25,16 +29,19 @@ public class PerformLogin extends AsyncTask<Void, Void, String> {
 
     public PerformLoginResponse delegate = null;
 
-    final String baseUrl = "https://science.swansea.ac.uk/intranet/accounts/login/?next=/intranet/";
-    final String loginUrl = "https://science.swansea.ac.uk/intranet/accounts/login/";
-    final String userAgent = "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36";
-    final private String next = "/intranet/";
+    private final String BASE_URL = "https://science.swansea.ac.uk/intranet/accounts/login/?next=/intranet/";
+    private final String LOGIN_URL = "https://science.swansea.ac.uk/intranet/accounts/login/";
+    private final String CHECK_URL = "https://science.swansea.ac.uk/intranet/";
+    private final String USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36";
+    private final String NEXT = "/intranet/";
 
-    final private String CONNECTION_FAIL = "CONNECTION_FAIL";
-    final private String LOGIN_FAIL = "LOGIN_FAIL";
-    final private String SUCCESS = "SUCCESS";
+    private final String CONNECTION_FAIL = "CONNECTION_FAIL";
+    private final String LOGIN_FAIL = "LOGIN_FAIL";
+    private final String SUCCESS = "SUCCESS";
 
-    private String crsftoken;
+    private final String CSRF_TOKEN = "csrftoken";
+
+    private String csrftoken;
     private Map<String, String> cookies;
 
     private CookieStorage cookieStorage = new CookieStorage();
@@ -62,7 +69,7 @@ public class PerformLogin extends AsyncTask<Void, Void, String> {
         try {
             // HTTP Get request
             Connection.Response getReq = Jsoup
-                    .connect(baseUrl)
+                    .connect(BASE_URL)
                     .method(Connection.Method.GET)
                     .execute();
 
@@ -70,16 +77,16 @@ public class PerformLogin extends AsyncTask<Void, Void, String> {
             cookies = getReq.cookies();
 
             // Strip crsftoken
-            crsftoken = cookies.get("csrftoken");
+            csrftoken = cookies.get(CSRF_TOKEN);
             // Login Request
             Connection.Response loginReq = Jsoup
-                    .connect(loginUrl)
-                    .data("csrfmiddlewaretoken", crsftoken)
+                    .connect(LOGIN_URL)
+                    .data("csrfmiddlewaretoken", csrftoken)
                     .data("username", username)
                     .data("password", password)
-                    .data("/next/", next)
-                    .userAgent(userAgent)
-                    .referrer("https://science.swansea.ac.uk/intranet/accounts/login/?next=/intranet/")
+                    .data("/next/", NEXT)
+                    .userAgent(USER_AGENT)
+                    .referrer(LOGIN_URL)
                     .cookies(cookies)
                     .method(Connection.Method.POST)
                     .execute();
@@ -89,14 +96,14 @@ public class PerformLogin extends AsyncTask<Void, Void, String> {
 
             //Store cookies
             cookies = loginReq.cookies();
-            cookieStorage.storeCookies(cookies, loginUrl);
+            cookieStorage.storeCookies(cookies, LOGIN_URL);
             // DEBUG CODE
             System.out.println(cookies);
 
             Document checkSuccess = Jsoup
-                    .connect("https://science.swansea.ac.uk/intranet/")
-                    .userAgent(userAgent)
-                    .referrer("https://science.swansea.ac.uk/intranet/accounts/login/?next=/intranet/")
+                    .connect(CHECK_URL)
+                    .userAgent(USER_AGENT)
+                    .referrer(LOGIN_URL)
                     .cookies(cookies)
                     .get();
 
@@ -116,13 +123,15 @@ public class PerformLogin extends AsyncTask<Void, Void, String> {
      * @param result
      */
     protected void onPostExecute(String result){
-        if(statusCode != 200){
-            System.out.println("Connection Issue" + statusCode + " Exception " + exception);
+        if(exception != null){
+            cookieStorage.removeCookies();
+            result = CONNECTION_FAIL;
+        }
+        else if(statusCode != 200){
             cookieStorage.removeCookies();
             result = CONNECTION_FAIL;
         }
         else if(!loginCheck.contains("Logged in as")){
-            System.out.println("Login failed");
             cookieStorage.removeCookies();
             result = LOGIN_FAIL;
         }else{

@@ -11,7 +11,12 @@ import android.widget.Toast;
 import egwh.scienceintranetscraper.R;
 
 /**
- * Created by eghar on 22/03/2017.
+ * @file Login.java
+ * @author Ed Harper
+ * @data 22/03/2017
+ *
+ * Login activity that takes user credentials and passes them to PerformLogin
+ * @see PerformLogin
  */
 public class Login extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
