@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Coursework Scraper Layout -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/coursework_scraper"
     android:orientation="vertical"
@@ -9,6 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/back_button"/>
+    <!-- Coursework View -->
     <ScrollView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

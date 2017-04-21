@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Timetable scraper layout -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/timetable_scraper"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
+    <!-- Buttons Bar -->
     <Button
         android:id="@+id/home_button"
         android:layout_width="wrap_content"
@@ -23,6 +25,7 @@
         android:layout_alignParentTop="true"
         android:layout_toStartOf="@+id/next_week_button"
         android:text="@string/previous_week_button" />
+    <!-- Time table view -->
     <ScrollView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
@@ -34,6 +37,7 @@
             android:id="@+id/hScroll"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
+            <!-- Time table table -->
             <TableLayout
                 android:id="@+id/lecture_timetable"
                 android:layout_width="match_parent"
